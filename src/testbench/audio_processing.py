@@ -22,3 +22,28 @@ def convert_wav_to_mp3(input_file: Path, output_file: Path) -> None:
 
     if result.returncode != 0:
         raise RuntimeError(f"ffmpeg error: {result.stderr}")
+
+
+def amplify_audio(input_path: Path, output_path: Path, gain_db: float) -> None:
+    """
+    Amplify the audio by a given number of decibels.
+
+    :param input_path: Path to the input .wav file
+    :param output_path: Path to the output .wav file
+    :param gain_db: Volume increase in decibels (e.g., 5.0 for +5 dB)
+    """
+    if not input_path.exists():
+        raise FileNotFoundError(f"Input file does not exist: {input_path}")
+
+    command = [
+        "ffmpeg",
+        "-y",
+        "-i", str(input_path),
+        "-filter:a", f"volume={gain_db}dB",
+        str(output_path)
+    ]
+
+    result = subprocess.run(command, capture_output=True, text=True)
+    
+    if result.returncode != 0:
+        raise RuntimeError(f"ffmpeg error: {result.stderr.strip()}")
