@@ -22,5 +22,8 @@ jobs:
     - name: Install dependencies
       run: poetry install
 
+    - name: Install ffmpeg
+      run: apt-get update && apt-get install -y ffmpeg 
+
     - name: Run tests
       run: poetry run pytest
