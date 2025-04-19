@@ -1,4 +1,4 @@
 # Test automation demo
 
 
-![Tests](https://github.com/mCodingLLC/SlapThatLikeButton-TestingStarterProject/actions/workflows/tests.yml/badge.svg)
+![Tests](https://github.com/hugorouillard/audio-test-automation-demo/actions/workflows/tests.yml/badge.svg)
