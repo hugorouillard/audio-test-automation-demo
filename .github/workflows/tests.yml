@@ -30,7 +30,7 @@ jobs:
 
     - name: Upload HTML coverage report
       if: success() && github.event_name == 'push'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: coverage-report
         path: path htmlcov/
