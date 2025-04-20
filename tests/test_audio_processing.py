@@ -47,17 +47,19 @@ def get_duration(path: Path) -> float:
 
     return float(result.stdout.strip())
 
+import pytest
 
-def test_process_audio_pipeline(tmp_path):
+@pytest.mark.parametrize("gain_db", [0.0, 5.0, 10.0])
+def test_process_audio_pipeline_with_gain(tmp_path, gain_db):
     input_wav = tmp_path / "input.wav"
-    output_mp3 = tmp_path / "final.mp3"
+    output_mp3 = tmp_path / f"final_{int(gain_db)}.mp3"
 
-    generate_dummy_wav(input_wav)  # 1s sine wave
-    process_audio_pipeline(input_wav, output_mp3)
+    generate_dummy_wav(input_wav)
+    process_audio_pipeline(input_wav, output_mp3, gain_db=gain_db)
 
     assert output_mp3.exists()
 
-    # Validate duration hasn't drifted much
+    # Validate duration hasn't drifted
     input_duration = get_duration(input_wav)
     output_duration = get_duration(output_mp3)
     assert abs(input_duration - output_duration) < 0.1

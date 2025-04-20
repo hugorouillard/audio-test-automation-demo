@@ -67,7 +67,7 @@ def normalize_audio(input_path: Path, output_path: Path) -> None:
     if result.returncode != 0:
         raise RuntimeError(f"ffmpeg error: {result.stderr.strip()}")
 
-def process_audio_pipeline(input_path: Path, final_output_path: Path) -> None:
+def process_audio_pipeline(input_path: Path, final_output_path: Path, gain_db: float = 5.0) -> None:
     """
     Apply a chain of audio processing: normalize → amplify → convert.
     """
@@ -75,5 +75,5 @@ def process_audio_pipeline(input_path: Path, final_output_path: Path) -> None:
     temp_amplified = input_path.parent / "amplified.wav"
 
     normalize_audio(input_path, temp_normalized)
-    amplify_audio(temp_normalized, temp_amplified, gain_db=5.0)
+    amplify_audio(temp_normalized, temp_amplified, gain_db=gain_db)
     convert_wav_to_mp3(temp_amplified, final_output_path)
