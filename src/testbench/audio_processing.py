@@ -6,11 +6,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 def run_ffmpeg(command: list[str], log_file: Path) -> None:
-    """
-    Run an ffmpeg command and log stdout/stderr to a file.
-    """
-    logger.debug(f"Running command: {' '.join(command)}")
-
+    log_file.parent.mkdir(parents=True, exist_ok=True)
     with open(log_file, "a") as log:
         result = subprocess.run(command, stdout=log, stderr=log, text=True)
 
@@ -34,7 +30,7 @@ def convert_wav_to_mp3(input_path: Path, output_path: Path) -> None:
         str(output_path)
     ]
     
-    run_ffmpeg(command, input_path.parent / "ffmpeg.log")
+    run_ffmpeg(command, Path("logs") / "ffmpeg.log")
 
 
 def amplify_audio(input_path: Path, output_path: Path, gain_db: float) -> None:
@@ -56,7 +52,7 @@ def amplify_audio(input_path: Path, output_path: Path, gain_db: float) -> None:
         str(output_path)
     ]
 
-    run_ffmpeg(command, input_path.parent / "ffmpeg.log")
+    run_ffmpeg(command, Path("logs") / "ffmpeg.log")
 
 def normalize_audio(input_path: Path, output_path: Path) -> None:
     """
@@ -73,7 +69,7 @@ def normalize_audio(input_path: Path, output_path: Path) -> None:
         str(output_path)
     ]
 
-    run_ffmpeg(command, input_path.parent / "ffmpeg.log")
+    run_ffmpeg(command, Path("logs") / "ffmpeg.log")
 
 def process_audio_pipeline(input_path: Path, final_output_path: Path, gain_db: float = 5.0) -> None:
     """
