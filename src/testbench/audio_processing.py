@@ -47,3 +47,33 @@ def amplify_audio(input_path: Path, output_path: Path, gain_db: float) -> None:
     
     if result.returncode != 0:
         raise RuntimeError(f"ffmpeg error: {result.stderr.strip()}")
+
+def normalize_audio(input_path: Path, output_path: Path) -> None:
+    """
+    Normalize audio to 0 dBFS using FFmpeg's loudnorm filter.
+    """
+    if not input_path.exists():
+        raise FileNotFoundError(f"Input file does not exist: {input_path}")
+
+    command = [
+        "ffmpeg",
+        "-y",
+        "-i", str(input_path),
+        "-filter:a", "loudnorm",
+        str(output_path)
+    ]
+
+    result = subprocess.run(command, capture_output=True, text=True)
+    if result.returncode != 0:
+        raise RuntimeError(f"ffmpeg error: {result.stderr.strip()}")
+
+def process_audio_pipeline(input_path: Path, final_output_path: Path) -> None:
+    """
+    Apply a chain of audio processing: normalize → amplify → convert.
+    """
+    temp_normalized = input_path.parent / "normalized.wav"
+    temp_amplified = input_path.parent / "amplified.wav"
+
+    normalize_audio(input_path, temp_normalized)
+    amplify_audio(temp_normalized, temp_amplified, gain_db=5.0)
+    convert_wav_to_mp3(temp_amplified, final_output_path)
