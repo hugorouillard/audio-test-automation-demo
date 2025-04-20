@@ -19,4 +19,13 @@ build-backend = "poetry.core.masonry.api"
 packages = [{ include = "testbench", from = "src" }]
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.5"
+pytest-cov = "^6.1.1"
+
+[tool.pytest.ini_options]
+addopts = "--cov=testbench --cov-report=term-missing --cov-report=html"
+
+[tool.coverage.run]
+omit = [
+    "src/testbench/__init__.py"
+]
 

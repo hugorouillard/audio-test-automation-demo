@@ -27,3 +27,10 @@ jobs:
 
     - name: Run tests
       run: poetry run pytest
+
+    - name: Upload HTML coverage report
+      if: success() && github.event_name == 'push'
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report
+        path: path htmlcov/
