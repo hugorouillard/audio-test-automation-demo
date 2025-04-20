@@ -1,6 +1,6 @@
 # Audio Test Automation Demo
 
-![Tests](https://github.com/hugorouillard/audio-test-automation-demo/actions/workflows/tests.yml/badge.svg)
+[![Tests](https://github.com/hugorouillard/audio-test-automation-demo/actions/workflows/tests.yml/badge.svg)](https://github.com/hugorouillard/audio-test-automation-demo/actions/workflows/tests.yml)
 
 Minimal test automation pipeline simulating audio QA workflows.
 
