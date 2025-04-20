@@ -1,27 +1,40 @@
 import subprocess
+import logging
 from pathlib import Path
 
-def convert_wav_to_mp3(input_file: Path, output_file: Path) -> None:
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+def run_ffmpeg(command: list[str], log_file: Path) -> None:
+    """
+    Run an ffmpeg command and log stdout/stderr to a file.
+    """
+    logger.debug(f"Running command: {' '.join(command)}")
+
+    with open(log_file, "a") as log:
+        result = subprocess.run(command, stdout=log, stderr=log, text=True)
+
+    if result.returncode != 0:
+        raise RuntimeError(f"ffmpeg command failed: {' '.join(command)}")
+
+def convert_wav_to_mp3(input_path: Path, output_path: Path) -> None:
     """
     Convert a WAV file to MP3 format using ffmpeg.
     
-    :param input_file: Path to the input .wav file.
-    :param output_file: Path to the output .mp3 file.
+    :param input_path: Path to the input .wav file.
+    :param output_path: Path to the output .mp3 file.
     """
-    if not input_file.exists():
-        raise FileNotFoundError(f"The input file {input_file} does not exist.")
+    if not input_path.exists():
+        raise FileNotFoundError(f"The input file {input_path} does not exist.")
 
     command = [
         'ffmpeg',
         '-y',
-        '-i', str(input_file),
-        str(output_file)
+        '-i', str(input_path),
+        str(output_path)
     ]
     
-    result = subprocess.run(command, capture_output=True, text=True)
-
-    if result.returncode != 0:
-        raise RuntimeError(f"ffmpeg error: {result.stderr}")
+    run_ffmpeg(command, input_path.parent / "ffmpeg.log")
 
 
 def amplify_audio(input_path: Path, output_path: Path, gain_db: float) -> None:
@@ -43,10 +56,7 @@ def amplify_audio(input_path: Path, output_path: Path, gain_db: float) -> None:
         str(output_path)
     ]
 
-    result = subprocess.run(command, capture_output=True, text=True)
-    
-    if result.returncode != 0:
-        raise RuntimeError(f"ffmpeg error: {result.stderr.strip()}")
+    run_ffmpeg(command, input_path.parent / "ffmpeg.log")
 
 def normalize_audio(input_path: Path, output_path: Path) -> None:
     """
@@ -63,9 +73,7 @@ def normalize_audio(input_path: Path, output_path: Path) -> None:
         str(output_path)
     ]
 
-    result = subprocess.run(command, capture_output=True, text=True)
-    if result.returncode != 0:
-        raise RuntimeError(f"ffmpeg error: {result.stderr.strip()}")
+    run_ffmpeg(command, input_path.parent / "ffmpeg.log")
 
 def process_audio_pipeline(input_path: Path, final_output_path: Path, gain_db: float = 5.0) -> None:
     """

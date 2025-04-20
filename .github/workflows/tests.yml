@@ -28,6 +28,14 @@ jobs:
     - name: Run tests
       run: poetry run pytest
 
+    - name: Upload FFmpeg logs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: ffmpeg-logs
+        path: "**/ffmpeg.log"
+
+
     - name: Upload HTML coverage report
       if: success() && github.event_name == 'push'
       uses: actions/upload-artifact@v4
