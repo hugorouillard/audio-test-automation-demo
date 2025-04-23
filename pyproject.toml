@@ -20,9 +20,10 @@ packages = [{ include = "testbench", from = "src" }]
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.5"
 pytest-cov = "^6.1.1"
+pytest-html = "^4.1.1"
 
 [tool.pytest.ini_options]
-addopts = "--cov=testbench --cov-report=term-missing --cov-report=html"
+addopts = "--cov=testbench --cov-report=term-missing --cov-report=html --html=report.html --self-contained-html"
 
 [tool.coverage.run]
 omit = [
