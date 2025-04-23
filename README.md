@@ -20,3 +20,4 @@ poetry run pytest
 ## CI Artifacts
 - Test logs
 - HTML coverage report
+- Unit tests report
